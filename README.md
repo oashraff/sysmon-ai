@@ -2,7 +2,7 @@
 
 **Terminal-Based System Monitor with Local AI Anomaly Detection**
 
-[![CI](https://github.com/yourusername/sysmon-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/yourusername/sysmon-ai/actions)
+[![CI](https://github.com/oashraff/sysmon-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/oashraff/sysmon-ai/actions)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -25,7 +25,7 @@ A zero-cost, privacy-first system monitoring solution that runs entirely on your
 
 ```bash
 # Clone repository
-git clone https://github.com/yourusername/sysmon-ai.git
+git clone https://github.com/oashraff/sysmon-ai.git
 cd sysmon-ai
 
 # Install with development dependencies
