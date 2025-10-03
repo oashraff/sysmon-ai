@@ -4,7 +4,8 @@
 
 1. **Clone and install:**
    ```bash
-   cd /Users/omarashraf/Desktop/symson_ai
+   git clone https://github.com/oashraff/sysmon-ai.git
+   cd sysmon-ai
    pip install -e ".[dev]"
    ```
 
