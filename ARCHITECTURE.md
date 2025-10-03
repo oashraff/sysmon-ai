@@ -276,27 +276,8 @@ sysmon start --db /another/path.db     # Overrides env var
 
 ## Security & Privacy
 
-- ✅ All data stored locally
-- ✅ No network calls at runtime
-- ✅ Optional anonymized host ID
-- ✅ No telemetry or tracking
-- ✅ Open source, auditable
-
-## Future Enhancements
-
-Organized by priority:
-
-### High Priority
-- [ ] Web dashboard (opt-in, local only)
-- [ ] Alert webhooks (local only)
-- [ ] Custom metric plugins
-
-### Medium Priority
-- [ ] Multi-host aggregation
-- [ ] LSTM forecasting
-- [ ] Model drift detection
-
-### Low Priority
-- [ ] Export to Prometheus format
-- [ ] Grafana integration
-- [ ] Mobile app (read-only)
+- All data stored locally
+- No network calls at runtime
+- Optional anonymized host ID
+- No telemetry or tracking
+- Open source, auditable

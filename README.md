@@ -10,14 +10,14 @@ A zero-cost, privacy-first system monitoring solution that runs entirely on your
 
 ## Features
 
-- 🖥️ **Real-time Monitoring**: CPU, memory, disk I/O, network, swap, process count
-- 🤖 **AI Anomaly Detection**: Isolation Forest with auto-calibration
-- 📈 **Resource Forecasting**: Time-to-threshold prediction with confidence intervals
-- 📊 **Rich Terminal Dashboard**: Live panels with sparklines and ASCII fallback
-- 🔔 **Local Alerts**: Screen notifications for anomalies and critical forecasts
-- 💾 **SQLite Storage**: WAL mode for concurrent access, configurable retention
-- 🔒 **Privacy-First**: All data stays local, optional anonymized host ID
-- ⚡ **Efficient**: < 3% CPU overhead, < 150MB RSS at 1s sampling
+- **Real-time Monitoring**: CPU, memory, disk I/O, network, swap, process count
+- **AI Anomaly Detection**: Isolation Forest with auto-calibration
+- **Resource Forecasting**: Time-to-threshold prediction with confidence intervals
+- **Rich Terminal Dashboard**: Live panels with sparklines and ASCII fallback
+- **Local Alerts**: Screen notifications for anomalies and critical forecasts
+- **SQLite Storage**: WAL mode for concurrent access, configurable retention
+- **Privacy-First**: All data stays local, optional anonymized host ID
+- **Efficient**: < 3% CPU overhead, < 150MB RSS at 1s sampling
 
 ## Quick Start
 
@@ -231,21 +231,12 @@ On synthetic data (100k train, 20k test, 5% contamination):
 
 | Metric | Value | Target |
 |--------|-------|--------|
-| Accuracy | 96.2% | ≥ 94% ✅ |
+| Accuracy | 96.2% | ≥ 94% |
 | Precision | 84.1% | - |
 | Recall | 78.5% | - |
-| FPR | 3.8% | ≤ 5% ✅ |
+| FPR | 3.8% | ≤ 5% |
 | AUC | 0.912 | - |
 | Lead time (mean) | 12.3s | - |
-
-## Roadmap
-
-- [ ] Multi-host monitoring and aggregation
-- [ ] Custom metric plugins
-- [ ] Web-based dashboard (optional)
-- [ ] LSTM forecasting for seasonal patterns
-- [ ] Alert webhooks (local only)
-- [ ] Drift detection for model retraining
 
 ## Contributing
 
@@ -266,7 +257,3 @@ MIT License - see [LICENSE](LICENSE) for details.
 - **Rich**: Beautiful terminal UIs
 - **scikit-learn**: ML algorithms
 - **SQLite**: Embedded database
-
----
-
-**Built with ❤️ for privacy-conscious system monitoring**
