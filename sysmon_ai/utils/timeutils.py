@@ -1,7 +1,7 @@
 """Time utilities for UTC/local conversions and parsing."""
 
 import time
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 from typing import Optional, Union
 
 

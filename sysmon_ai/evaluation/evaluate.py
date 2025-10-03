@@ -3,12 +3,11 @@
 import json
 import logging
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
 
 from sysmon_ai.data import Repository
 from sysmon_ai.detection import AnomalyDetector
@@ -77,10 +76,17 @@ class Evaluator:
         train_df = generator.generate_baseline(n_train, start_ts, interval=1)
 
         test_start_ts = start_ts + n_train
-        test_df_clean = generator.generate_baseline(n_test, test_start_ts, interval=1)
+        test_df_clean = generator.generate_baseline(
+            n_test, test_start_ts, interval=1
+        )
 
         # Inject anomalies into test set
-        anomaly_types = ["cpu_spike", "memory_leak", "io_storm", "network_flood"]
+        anomaly_types = [
+            "cpu_spike",
+            "memory_leak",
+            "io_storm",
+            "network_flood",
+        ]
         test_df, y_true = generator.inject_anomalies(
             test_df_clean, anomaly_types, contamination
         )
@@ -138,7 +144,9 @@ class Evaluator:
 
         return results
 
-    def _plot_roc_curve(self, y_true: np.ndarray, y_scores: np.ndarray) -> None:
+    def _plot_roc_curve(
+        self, y_true: np.ndarray, y_scores: np.ndarray
+    ) -> None:
         """Plot ROC curve."""
         fpr, tpr, _ = compute_roc_curve(y_true, y_scores)
 
@@ -184,7 +192,12 @@ class Evaluator:
 
         plt.figure(figsize=(10, 6))
         plt.hist(
-            normal_scores, bins=50, alpha=0.5, label="Normal", color="blue", density=True
+            normal_scores,
+            bins=50,
+            alpha=0.5,
+            label="Normal",
+            color="blue",
+            density=True,
         )
         plt.hist(
             anomaly_scores,

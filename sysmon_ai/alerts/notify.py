@@ -39,11 +39,12 @@ class Notifier:
         elif severity == "warning":
             color = "\033[93m"  # Yellow
         else:
-            color = "\033[92m"  # Green
+            color, reset = "\033[92m", "\033[0m"
 
-        reset = "\033[0m"
-
-        print(f"\n{color}[{severity.upper()}] {message}{reset}", file=sys.stderr)
+        print(
+            f"\n{color}[{severity.upper()}] {message}{reset}",
+            file=sys.stderr,
+        )
 
         # Sound alert
         if self.enable_sound and severity in ("critical", "warning"):

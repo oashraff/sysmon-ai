@@ -3,7 +3,7 @@
 import os
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Optional
 
 import yaml
 
@@ -125,13 +125,27 @@ class Config:
 
         return cls(
             host=config_dict.get("host", os.uname().nodename),
-            sampling=_build_nested(SamplingConfig, config_dict.get("sampling", {})),
-            storage=_build_nested(StorageConfig, config_dict.get("storage", {})),
-            anomaly=_build_nested(AnomalyConfig, config_dict.get("anomaly", {})),
-            forecast=_build_nested(ForecastConfig, config_dict.get("forecast", {})),
-            thresholds=_build_nested(ThresholdConfig, config_dict.get("thresholds", {})),
-            dashboard=_build_nested(DashboardConfig, config_dict.get("dashboard", {})),
-            logging=_build_nested(LoggingConfig, config_dict.get("logging", {})),
+            sampling=_build_nested(
+                SamplingConfig, config_dict.get("sampling", {})
+            ),
+            storage=_build_nested(
+                StorageConfig, config_dict.get("storage", {})
+            ),
+            anomaly=_build_nested(
+                AnomalyConfig, config_dict.get("anomaly", {})
+            ),
+            forecast=_build_nested(
+                ForecastConfig, config_dict.get("forecast", {})
+            ),
+            thresholds=_build_nested(
+                ThresholdConfig, config_dict.get("thresholds", {})
+            ),
+            dashboard=_build_nested(
+                DashboardConfig, config_dict.get("dashboard", {})
+            ),
+            logging=_build_nested(
+                LoggingConfig, config_dict.get("logging", {})
+            ),
         )
 
     def save(self, path: Path) -> None:
@@ -189,7 +203,9 @@ class Config:
 
 def _build_nested(cls: type, data: Dict[str, Any]) -> Any:
     """Build dataclass instance from dict."""
-    return cls(**{k: v for k, v in data.items() if k in cls.__dataclass_fields__})
+    return cls(
+        **{k: v for k, v in data.items() if k in cls.__dataclass_fields__}
+    )
 
 
 def _parse_env_value(value: str) -> Any:

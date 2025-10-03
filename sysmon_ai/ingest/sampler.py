@@ -172,7 +172,12 @@ class MetricsSampler:
                 temps = psutil.sensors_temperatures()
                 if temps:
                     # Try common sensor names
-                    for key in ["coretemp", "k10temp", "zenpower", "cpu_thermal"]:
+                    for key in [
+                        "coretemp",
+                        "k10temp",
+                        "zenpower",
+                        "cpu_thermal",
+                    ]:
                         if key in temps and temps[key]:
                             return temps[key][0].current
             return None

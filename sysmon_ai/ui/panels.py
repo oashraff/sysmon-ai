@@ -129,15 +129,19 @@ class AlertsPanel:
 
         content = Text()
         for alert in alerts[:max_alerts]:
-            ts = alert.get("ts", 0)
+            alert.get("ts", 0)
             msg = alert.get("explanation", "Unknown")
             alert_type = alert.get("type", "anomaly")
 
             style = "red" if alert_type == "anomaly" else "yellow"
-            content.append(f"• ", style=style)
+            content.append("• ", style=style)
             content.append(f"{msg}\n", style="white")
 
-        border_color = "red" if any(a.get("type") == "anomaly" for a in alerts[:3]) else "yellow"
+        border_color = (
+            "red"
+            if any(a.get("type") == "anomaly" for a in alerts[:3])
+            else "yellow"
+        )
 
         return Panel(
             content,

@@ -8,7 +8,11 @@ import pandas as pd
 
 from sysmon_ai.data import Repository
 from sysmon_ai.features import FeatureTransformer
-from sysmon_ai.models import IsolationForestModel, deserialize_model, serialize_model
+from sysmon_ai.models import (
+    IsolationForestModel,
+    deserialize_model,
+    serialize_model,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +21,8 @@ class AnomalyDetector:
     """
     End-to-end anomaly detection pipeline.
 
-    Coordinates feature transformation, model training/inference, and event extraction.
+    Coordinates feature transformation, model training/inference,
+    and event extraction.
     """
 
     def __init__(
@@ -57,7 +62,9 @@ class AnomalyDetector:
         Returns:
             Training metrics dict
         """
-        logger.info(f"Training anomaly detector from {start_ts} to {end_ts}...")
+        logger.info(
+            f"Training anomaly detector from {start_ts} to {end_ts}..."
+        )
 
         # Load training data
         df = self.repository.read_samples(start_ts, end_ts, host)
@@ -187,23 +194,29 @@ class AnomalyDetector:
 
             # Simple heuristic: flag high percentage metrics
             flagged_metrics = [
-                k for k, v in metric_values.items()
-                if "pct" in k and v > 80
+                k for k, v in metric_values.items() if "pct" in k and v > 80
             ]
 
             if not flagged_metrics:
                 # Flag I/O metrics if very high
                 flagged_metrics = [
-                    k for k, v in metric_values.items()
+                    k
+                    for k, v in metric_values.items()
                     if "bps" in k and v > 10**7  # > 10MB/s
                 ]
 
-            anomalies.append({
-                "ts": int(sample["ts"]),
-                "score": float(score),
-                "metric_tags": ",".join(flagged_metrics) if flagged_metrics else "general",
-                "explanation": self._explain_anomaly(sample, score),
-            })
+            anomalies.append(
+                {
+                    "ts": int(sample["ts"]),
+                    "score": float(score),
+                    "metric_tags": (
+                        ",".join(flagged_metrics)
+                        if flagged_metrics
+                        else "general"
+                    ),
+                    "explanation": self._explain_anomaly(sample, score),
+                }
+            )
 
         return anomalies
 
@@ -216,9 +229,13 @@ class AnomalyDetector:
         if sample["mem_pct"] > 80:
             parts.append(f"high memory ({sample['mem_pct']:.1f}%)")
         if sample["disk_write_bps"] > 10**7:
-            parts.append(f"high disk write ({sample['disk_write_bps']/1e6:.1f} MB/s)")
+            parts.append(
+                f"high disk write ({sample['disk_write_bps']/1e6:.1f} MB/s)"
+            )
         if sample["net_down_bps"] > 10**7:
-            parts.append(f"high network download ({sample['net_down_bps']/1e6:.1f} MB/s)")
+            parts.append(
+                f"high network download ({sample['net_down_bps']/1e6:.1f} MB/s)"
+            )
 
         if parts:
             return f"Anomaly score {score:.3f}: " + ", ".join(parts)

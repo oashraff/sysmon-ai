@@ -37,7 +37,8 @@ jobs:
 
     - name: Lint with flake8
       run: |
-        flake8 sysmon_ai --count --show-source --statistics
+        # Use 88 char line length (black's default) and ignore E203 (conflicts with black)
+        flake8 sysmon_ai --count --show-source --statistics --max-line-length=88 --extend-ignore=E203
 
     - name: Format check with black
       run: |

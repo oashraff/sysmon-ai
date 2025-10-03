@@ -2,12 +2,11 @@
 
 import logging
 import random
-from typing import Dict, List, Tuple
+from typing import List, Tuple
 
 import numpy as np
 import pandas as pd
 
-from sysmon_ai.utils import now_utc_ts
 
 logger = logging.getLogger(__name__)
 
@@ -71,11 +70,19 @@ class SyntheticDataGenerator:
         disk_write = np.abs(np.random.lognormal(10, 2, n_samples))
 
         # Network: daytime pattern
-        net_up_base = 10**6 * (1 + 0.5 * np.sin(t * 2 * np.pi / (86400 / interval)))
-        net_up = np.abs(np.random.lognormal(np.log(net_up_base), 0.5, n_samples))
+        net_up_base = 10**6 * (
+            1 + 0.5 * np.sin(t * 2 * np.pi / (86400 / interval))
+        )
+        net_up = np.abs(
+            np.random.lognormal(np.log(net_up_base), 0.5, n_samples)
+        )
 
-        net_down_base = 5 * 10**6 * (1 + 0.5 * np.sin(t * 2 * np.pi / (86400 / interval)))
-        net_down = np.abs(np.random.lognormal(np.log(net_down_base), 0.5, n_samples))
+        net_down_base = (
+            5 * 10**6 * (1 + 0.5 * np.sin(t * 2 * np.pi / (86400 / interval)))
+        )
+        net_down = np.abs(
+            np.random.lognormal(np.log(net_down_base), 0.5, n_samples)
+        )
 
         # Swap: low and stable
         swap_pct = np.clip(np.random.normal(5, 2, n_samples), 0, 100)
@@ -83,19 +90,21 @@ class SyntheticDataGenerator:
         # Process count: stable
         proc_count = np.random.poisson(200, n_samples)
 
-        df = pd.DataFrame({
-            "ts": timestamps,
-            "host": self.host,
-            "cpu_pct": cpu_pct,
-            "mem_pct": mem_pct,
-            "disk_read_bps": disk_read,
-            "disk_write_bps": disk_write,
-            "net_up_bps": net_up,
-            "net_down_bps": net_down,
-            "swap_pct": swap_pct,
-            "proc_count": proc_count,
-            "cpu_temp": None,
-        })
+        df = pd.DataFrame(
+            {
+                "ts": timestamps,
+                "host": self.host,
+                "cpu_pct": cpu_pct,
+                "mem_pct": mem_pct,
+                "disk_read_bps": disk_read,
+                "disk_write_bps": disk_write,
+                "net_up_bps": net_up,
+                "net_down_bps": net_down,
+                "swap_pct": swap_pct,
+                "proc_count": proc_count,
+                "cpu_temp": None,
+            }
+        )
 
         logger.info(f"Generated baseline: {len(df)} samples")
         return df
@@ -148,5 +157,8 @@ class SyntheticDataGenerator:
 
             labels[idx] = 1
 
-        logger.info(f"Injected {n_anomalies} anomalies: {dict(zip(*np.unique(labels, return_counts=True)))}")
+        anomaly_counts = dict(
+            zip(*np.unique(labels, return_counts=True))
+        )
+        logger.info(f"Injected {n_anomalies} anomalies: {anomaly_counts}")
         return df, labels

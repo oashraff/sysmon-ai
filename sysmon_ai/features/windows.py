@@ -1,7 +1,7 @@
 """Windowed feature extraction from time-series data."""
 
 import logging
-from typing import List, Optional
+from typing import List
 
 import numpy as np
 import pandas as pd
@@ -76,18 +76,26 @@ class FeatureWindows:
 
             # Short window
             result[f"{col}_rmean_s"] = (
-                result[col].rolling(window=self.short_window, min_periods=1).mean()
+                result[col]
+                .rolling(window=self.short_window, min_periods=1)
+                .mean()
             )
             result[f"{col}_rstd_s"] = (
-                result[col].rolling(window=self.short_window, min_periods=1).std()
+                result[col]
+                .rolling(window=self.short_window, min_periods=1)
+                .std()
             )
 
             # Long window
             result[f"{col}_rmean_l"] = (
-                result[col].rolling(window=self.long_window, min_periods=1).mean()
+                result[col]
+                .rolling(window=self.long_window, min_periods=1)
+                .mean()
             )
             result[f"{col}_rstd_l"] = (
-                result[col].rolling(window=self.long_window, min_periods=1).std()
+                result[col]
+                .rolling(window=self.long_window, min_periods=1)
+                .std()
             )
 
         return result
@@ -117,7 +125,9 @@ class FeatureWindows:
 
             for alpha in alphas:
                 ema_col = f"{col}_ema{int(alpha*10)}"
-                result[ema_col] = result[col].ewm(alpha=alpha, adjust=False).mean()
+                result[ema_col] = (
+                    result[col].ewm(alpha=alpha, adjust=False).mean()
+                )
 
         return result
 
@@ -154,7 +164,11 @@ class FeatureWindows:
                     window_vals = values[i - window + 1 : i + 1]
                     x = np.arange(window)
                     # Simple linear regression
-                    slope = np.polyfit(x, window_vals, 1)[0] if len(window_vals) == window else 0.0
+                    slope = (
+                        np.polyfit(x, window_vals, 1)[0]
+                        if len(window_vals) == window
+                        else 0.0
+                    )
                     slopes.append(slope)
 
             result[f"{col}_slope"] = slopes
@@ -184,8 +198,12 @@ class FeatureWindows:
             if col not in df.columns:
                 continue
 
-            rolling_max = result[col].rolling(window=window, min_periods=1).max()
-            rolling_mean = result[col].rolling(window=window, min_periods=1).mean()
+            rolling_max = (
+                result[col].rolling(window=window, min_periods=1).max()
+            )
+            rolling_mean = (
+                result[col].rolling(window=window, min_periods=1).mean()
+            )
 
             # Avoid division by zero
             burst_ratio = rolling_max / (rolling_mean + 1e-6)

@@ -65,7 +65,9 @@ class TimeToThresholdForecaster(BaseModel):
         Returns:
             Self for chaining
         """
-        logger.info(f"Training {self.algo} forecaster on {X.shape[0]} samples...")
+        logger.info(
+            f"Training {self.algo} forecaster on {X.shape[0]} samples..."
+        )
         self._model.fit(X, y)
 
         # Compute residual std for confidence intervals

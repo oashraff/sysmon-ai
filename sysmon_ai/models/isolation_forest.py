@@ -49,7 +49,9 @@ class IsolationForestModel(BaseModel):
 
         self._threshold: Optional[float] = None
 
-    def fit(self, X: np.ndarray, y: Optional[np.ndarray] = None) -> "IsolationForestModel":
+    def fit(
+        self, X: np.ndarray, y: Optional[np.ndarray] = None
+    ) -> "IsolationForestModel":
         """
         Fit Isolation Forest on training data.
 

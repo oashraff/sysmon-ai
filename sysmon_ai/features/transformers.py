@@ -1,7 +1,7 @@
 """Feature transformers for ML model input."""
 
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Dict, List, Optional
 
 import numpy as np
 import pandas as pd
@@ -95,7 +95,9 @@ class FeatureTransformer:
             Transformed feature matrix
         """
         if not self._is_fitted:
-            raise RuntimeError("Transformer not fitted. Call fit_transform first.")
+            raise RuntimeError(
+                "Transformer not fitted. Call fit_transform first."
+            )
 
         features_df = self._engineer_features(df)
 
@@ -131,7 +133,9 @@ class FeatureTransformer:
         features = self.windows.add_lags(features, self.metric_columns)
 
         # Add rolling stats
-        features = self.windows.add_rolling_stats(features, self.metric_columns)
+        features = self.windows.add_rolling_stats(
+            features, self.metric_columns
+        )
 
         # Add EMA
         features = self.windows.add_ema(features, self.metric_columns)

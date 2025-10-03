@@ -9,10 +9,9 @@ from rich.console import Console
 from rich.layout import Layout
 from rich.live import Live
 from rich.panel import Panel
-from rich.table import Table
 from rich.text import Text
 
-from sysmon_ai.ui.panels import AlertsPanel, ForecastPanel, MetricPanel, SystemStatsPanel
+from sysmon_ai.ui.panels import AlertsPanel, ForecastPanel, MetricPanel
 from sysmon_ai.utils import format_duration, get_hostname
 
 logger = logging.getLogger(__name__)
@@ -144,7 +143,7 @@ class Dashboard:
 
         disk_read_mb = sample.get("disk_read_bps", 0) / 1e6
         disk_write_mb = sample.get("disk_write_bps", 0) / 1e6
-        disk_total = disk_read_mb + disk_write_mb
+        disk_read_mb + disk_write_mb
 
         io_layout["disk"].update(
             Panel(
@@ -205,7 +204,9 @@ class Dashboard:
         header_text.append(f"{host}", style="bold cyan")
         header_text.append(f"  |  Uptime: {uptime}", style="dim")
         header_text.append(f"  |  {now}", style="dim")
-        header_text.append(f"  |  Refresh: {self.refresh_rate:.1f}s", style="dim")
+        header_text.append(
+            f"  |  Refresh: {self.refresh_rate:.1f}s", style="dim"
+        )
 
         return Panel(header_text, style="bold white on blue")
 
@@ -223,7 +224,9 @@ class Dashboard:
         if db_stats:
             samples = db_stats.get("sample_count", 0)
             size_mb = db_stats.get("db_size_mb", 0)
-            footer_text.append(f"  |  DB: {samples:,} samples, {size_mb:.1f} MB", style="dim")
+            footer_text.append(
+                f"  |  DB: {samples:,} samples, {size_mb:.1f} MB", style="dim"
+            )
 
         return Panel(footer_text, style="white on black")
 
@@ -232,7 +235,9 @@ class Dashboard:
         self._history["cpu"].append(sample.get("cpu_pct", 0))
         self._history["mem"].append(sample.get("mem_pct", 0))
         self._history["disk_read"].append(sample.get("disk_read_bps", 0) / 1e6)
-        self._history["disk_write"].append(sample.get("disk_write_bps", 0) / 1e6)
+        self._history["disk_write"].append(
+            sample.get("disk_write_bps", 0) / 1e6
+        )
         self._history["net_up"].append(sample.get("net_up_bps", 0) / 1e6)
         self._history["net_down"].append(sample.get("net_down_bps", 0) / 1e6)
 
@@ -250,7 +255,8 @@ class Dashboard:
         Run live dashboard with data callback.
 
         Args:
-            data_callback: Callable that returns (sample, anomalies, alerts, forecasts, db_stats)
+            data_callback: Callable that returns
+                (sample, anomalies, alerts, forecasts, db_stats)
             stop_event: Threading event to signal stop
         """
         with Live(

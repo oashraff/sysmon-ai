@@ -20,7 +20,9 @@ class BaseModel(ABC):
         self._is_fitted = False
 
     @abstractmethod
-    def fit(self, X: np.ndarray, y: Optional[np.ndarray] = None) -> "BaseModel":
+    def fit(
+        self, X: np.ndarray, y: Optional[np.ndarray] = None
+    ) -> "BaseModel":
         """
         Fit model on training data.
 
@@ -31,7 +33,6 @@ class BaseModel(ABC):
         Returns:
             Self for chaining
         """
-        pass
 
     @abstractmethod
     def predict(self, X: np.ndarray) -> np.ndarray:
@@ -44,7 +45,6 @@ class BaseModel(ABC):
         Returns:
             Predictions array
         """
-        pass
 
     @abstractmethod
     def get_params(self) -> Dict[str, Any]:
@@ -54,7 +54,6 @@ class BaseModel(ABC):
         Returns:
             Dict of parameter names and values
         """
-        pass
 
     def is_fitted(self) -> bool:
         """Check if model is fitted."""

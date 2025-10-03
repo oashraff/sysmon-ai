@@ -2,7 +2,6 @@
 
 import platform
 import sys
-from typing import Optional
 
 
 def get_platform() -> str:

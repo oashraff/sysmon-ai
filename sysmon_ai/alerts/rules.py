@@ -4,7 +4,6 @@ import logging
 from typing import Any, Dict, List, Optional
 
 from sysmon_ai.config import ThresholdConfig
-from sysmon_ai.detection import AnomalyEvent, ForecastEvent
 
 logger = logging.getLogger(__name__)
 
@@ -66,7 +65,10 @@ class ThresholdRule(AlertRule):
             return None
 
         if value >= self.threshold:
-            return f"{self.metric} exceeded threshold: {value:.1f} >= {self.threshold}"
+            return (
+                f"{self.metric} exceeded threshold: "
+                f"{value:.1f} >= {self.threshold}"
+            )
 
         return None
 
@@ -147,13 +149,19 @@ class RuleEngine:
     def _add_default_rules(self) -> None:
         """Add default threshold rules."""
         self.rules.append(
-            ThresholdRule("cpu_high", "cpu_pct", self.thresholds.cpu_pct, "warning")
+            ThresholdRule(
+                "cpu_high", "cpu_pct", self.thresholds.cpu_pct, "warning"
+            )
         )
         self.rules.append(
-            ThresholdRule("mem_high", "mem_pct", self.thresholds.mem_pct, "warning")
+            ThresholdRule(
+                "mem_high", "mem_pct", self.thresholds.mem_pct, "warning"
+            )
         )
         self.rules.append(
-            ThresholdRule("swap_high", "swap_pct", self.thresholds.swap_pct, "warning")
+            ThresholdRule(
+                "swap_high", "swap_pct", self.thresholds.swap_pct, "warning"
+            )
         )
         self.rules.append(AnomalyRule())
 
@@ -187,12 +195,14 @@ class RuleEngine:
             # Evaluate rule
             message = rule.evaluate(data)
             if message:
-                alerts.append({
-                    "rule": rule.name,
-                    "severity": rule.severity,
-                    "message": message,
-                    "ts": current_ts,
-                })
+                alerts.append(
+                    {
+                        "rule": rule.name,
+                        "severity": rule.severity,
+                        "message": message,
+                        "ts": current_ts,
+                    }
+                )
                 self._last_alerts[rule.name] = current_ts
                 logger.info(f"Alert triggered: {rule.name} - {message}")
 

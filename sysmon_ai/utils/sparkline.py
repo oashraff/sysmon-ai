@@ -44,8 +44,7 @@ def sparkline(
 
     # Normalize to 0-8 range
     normalized = [
-        int(((val - min_val) / (max_val - min_val)) * 8)
-        for val in data
+        int(((val - min_val) / (max_val - min_val)) * 8) for val in data
     ]
 
     return "".join(blocks[min(n, 8)] for n in normalized)
@@ -84,7 +83,9 @@ def horizontal_bar(
     return filled * filled_width + empty * (width - filled_width)
 
 
-def mini_histogram(data: List[float], bins: int = 10, height: int = 5) -> List[str]:
+def mini_histogram(
+    data: List[float], bins: int = 10, height: int = 5
+) -> List[str]:
     """
     Generate ASCII histogram lines.
 

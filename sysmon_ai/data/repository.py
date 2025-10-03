@@ -172,12 +172,15 @@ class Repository:
 
         self._conn.execute(
             """
-            INSERT OR REPLACE INTO models (name, algo, version, trained_at, meta_json, blob)
+            INSERT OR REPLACE INTO models
+            (name, algo, version, trained_at, meta_json, blob)
             VALUES (?, ?, ?, ?, ?, ?)
             """,
             (name, algo, version, now_utc_ts(), meta_json, blob),
         )
-        logger.info(f"Model saved: {name} (algo={algo}, version={version})")
+        logger.info(
+            f"Model saved: {name} (algo={algo}, version={version})"
+        )
 
     def load_model(self, name: str) -> Optional[Dict[str, Any]]:
         """
@@ -193,7 +196,10 @@ class Repository:
             raise RuntimeError("Database not connected")
 
         cursor = self._conn.execute(
-            "SELECT algo, version, trained_at, meta_json, blob FROM models WHERE name = ?",
+            """
+            SELECT algo, version, trained_at, meta_json, blob
+            FROM models WHERE name = ?
+            """,
             (name,),
         )
         row = cursor.fetchone()
@@ -308,12 +314,16 @@ class Repository:
 
         cutoff_ts = now_utc_ts() - (retention_days * 86400)
 
-        cursor = self._conn.execute("DELETE FROM samples WHERE ts < ?", (cutoff_ts,))
+        cursor = self._conn.execute(
+            "DELETE FROM samples WHERE ts < ?", (cutoff_ts,)
+        )
         deleted = cursor.rowcount
 
         if deleted > 0:
             self._conn.execute("VACUUM")
-            logger.info(f"Pruned {deleted} old samples (retention={retention_days}d)")
+            logger.info(
+                f"Pruned {deleted} old samples (retention={retention_days}d)"
+            )
 
         return deleted
 

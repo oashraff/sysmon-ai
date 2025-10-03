@@ -1,6 +1,5 @@
 """Command-line interface using Typer."""
 
-import logging
 import sys
 import threading
 import time
@@ -11,17 +10,16 @@ import typer
 from rich.console import Console
 
 from sysmon_ai import __version__
-from sysmon_ai.alerts import Notifier, RuleEngine
 from sysmon_ai.config import Config
 from sysmon_ai.data import Repository
 from sysmon_ai.detection import AnomalyDetector
-from sysmon_ai.evaluation import Evaluator, SyntheticDataGenerator
+from sysmon_ai.evaluation import Evaluator
 from sysmon_ai.features import FeatureTransformer
 from sysmon_ai.ingest import BatchWriter, MetricsSampler
 from sysmon_ai.logging_setup import setup_logging
 from sysmon_ai.models import IsolationForestModel
 from sysmon_ai.ui import Dashboard
-from sysmon_ai.utils import get_time_range, now_utc_ts, parse_duration
+from sysmon_ai.utils import get_time_range, parse_duration
 
 app = typer.Typer(
     name="sysmon",
@@ -35,10 +33,14 @@ console = Console()
 @app.command()
 def init(
     db_path: str = typer.Option("sysmon.db", "--db", help="Database path"),
-    config_path: Optional[Path] = typer.Option(None, "--config", help="Config file path"),
+    config_path: Optional[Path] = typer.Option(
+        None, "--config", help="Config file path"
+    ),
 ) -> None:
     """Initialize database and configuration."""
-    console.print(f"[bold cyan]Initializing sysmon v{__version__}...[/bold cyan]")
+    console.print(
+        f"[bold cyan]Initializing sysmon v{__version__}...[/bold cyan]"
+    )
 
     # Load or create config
     config = Config.load(config_path) if config_path else Config()
@@ -77,17 +79,23 @@ def init(
 @app.command()
 def start(
     db_path: str = typer.Option("sysmon.db", "--db", help="Database path"),
-    config_path: Optional[Path] = typer.Option(None, "--config", help="Config file"),
-    duration: Optional[str] = typer.Option(None, "--duration", help="Run duration (e.g., '1h', '7d')"),
+    config_path: Optional[Path] = typer.Option(
+        None, "--config", help="Config file"
+    ),
+    duration: Optional[str] = typer.Option(
+        None, "--duration", help="Run duration (e.g., '1h', '7d')"
+    ),
 ) -> None:
     """Start metrics collection."""
     config = Config.load(config_path) if config_path else Config()
     if db_path:
         config.storage.db_path = db_path
 
-    logger = setup_logging(level=config.logging.level, log_file=config.logging.file_path)
+    logger = setup_logging(
+        level=config.logging.level, log_file=config.logging.file_path
+    )
 
-    console.print(f"[bold cyan]Starting metrics collector...[/bold cyan]")
+    console.print("[bold cyan]Starting metrics collector...[/bold cyan]")
     console.print(f"  Host: {config.host}")
     console.print(f"  Sampling rate: {config.sampling.rate_seconds}s")
     console.print(f"  Database: {config.storage.db_path}")
@@ -108,7 +116,9 @@ def start(
     # Collection loop
     try:
         start_time = time.time()
-        end_time = start_time + parse_duration(duration) if duration else float("inf")
+        end_time = (
+            start_time + parse_duration(duration) if duration else float("inf")
+        )
         sample_count = 0
 
         while time.time() < end_time:
@@ -133,7 +143,7 @@ def start(
         repo.close()
 
         stats = writer.get_stats()
-        console.print(f"[bold green]✓ Collection stopped[/bold green]")
+        console.print("[bold green]✓ Collection stopped[/bold green]")
         console.print(f"  Total written: {stats['written']:,}")
         console.print(f"  Dropped: {stats['dropped']:,}")
 
@@ -141,8 +151,12 @@ def start(
 @app.command()
 def train(
     db_path: str = typer.Option("sysmon.db", "--db", help="Database path"),
-    config_path: Optional[Path] = typer.Option(None, "--config", help="Config file"),
-    window: str = typer.Option("7d", "--window", help="Training window duration"),
+    config_path: Optional[Path] = typer.Option(
+        None, "--config", help="Config file"
+    ),
+    window: str = typer.Option(
+        "7d", "--window", help="Training window duration"
+    ),
     host: Optional[str] = typer.Option(None, "--host", help="Filter by host"),
 ) -> None:
     """Train anomaly detection model."""
@@ -152,7 +166,7 @@ def train(
 
     logger = setup_logging(level=config.logging.level)
 
-    console.print(f"[bold cyan]Training anomaly detection model...[/bold cyan]")
+    console.print("[bold cyan]Training anomaly detection model...[/bold cyan]")
     console.print(f"  Window: {window}")
     console.print(f"  Database: {config.storage.db_path}")
 
@@ -194,10 +208,14 @@ def train(
 @app.command()
 def detect(
     db_path: str = typer.Option("sysmon.db", "--db", help="Database path"),
-    config_path: Optional[Path] = typer.Option(None, "--config", help="Config file"),
+    config_path: Optional[Path] = typer.Option(
+        None, "--config", help="Config file"
+    ),
     window: str = typer.Option("1h", "--window", help="Detection window"),
     host: Optional[str] = typer.Option(None, "--host", help="Filter by host"),
-    save_events: bool = typer.Option(True, "--save-events/--no-save-events", help="Save events to DB"),
+    save_events: bool = typer.Option(
+        True, "--save-events/--no-save-events", help="Save events to DB"
+    ),
 ) -> None:
     """Run anomaly detection on historical data."""
     config = Config.load(config_path) if config_path else Config()
@@ -206,7 +224,7 @@ def detect(
 
     logger = setup_logging(level=config.logging.level)
 
-    console.print(f"[bold cyan]Running anomaly detection...[/bold cyan]")
+    console.print("[bold cyan]Running anomaly detection...[/bold cyan]")
 
     # Initialize
     repo = Repository(config.storage.db_path)
@@ -218,7 +236,10 @@ def detect(
 
     # Load model
     if not detector.load_model():
-        console.print("[bold red]✗ No trained model found. Run 'sysmon train' first.[/bold red]")
+        console.print(
+            "[bold red]✗ No trained model found. "
+            "Run 'sysmon train' first.[/bold red]"
+        )
         repo.close()
         sys.exit(1)
 
@@ -229,9 +250,10 @@ def detect(
         df, scores, is_anomaly = detector.detect(start_ts, end_ts, host)
 
         anomaly_count = int(is_anomaly.sum())
-        console.print(f"[bold green]✓ Detection complete[/bold green]")
+        console.print("[bold green]✓ Detection complete[/bold green]")
         console.print(f"  Samples: {len(df):,}")
-        console.print(f"  Anomalies: {anomaly_count:,} ({100*anomaly_count/len(df):.2f}%)")
+        anomaly_pct = 100 * anomaly_count / len(df)
+        console.print(f"  Anomalies: {anomaly_count:,} ({anomaly_pct:.2f}%)")
 
         # Extract and save events
         if save_events and anomaly_count > 0:
@@ -257,17 +279,19 @@ def detect(
 @app.command()
 def dashboard(
     db_path: str = typer.Option("sysmon.db", "--db", help="Database path"),
-    config_path: Optional[Path] = typer.Option(None, "--config", help="Config file"),
+    config_path: Optional[Path] = typer.Option(
+        None, "--config", help="Config file"
+    ),
 ) -> None:
     """Launch live dashboard."""
     config = Config.load(config_path) if config_path else Config()
     if db_path:
         config.storage.db_path = db_path
 
-    logger = setup_logging(level=config.logging.level)
+    setup_logging(level=config.logging.level)
 
-    console.print(f"[bold cyan]Launching dashboard...[/bold cyan]")
-    console.print(f"  Press Ctrl+C to stop")
+    console.print("[bold cyan]Launching dashboard...[/bold cyan]")
+    console.print("  Press Ctrl+C to stop")
 
     # Initialize components
     repo = Repository(config.storage.db_path)
@@ -307,11 +331,21 @@ def dashboard(
 
 @app.command()
 def evaluate(
-    db_path: str = typer.Option("sysmon_eval.db", "--db", help="Evaluation database"),
-    config_path: Optional[Path] = typer.Option(None, "--config", help="Config file"),
-    output_dir: Path = typer.Option("evaluation", "--output", help="Output directory"),
-    train_samples: int = typer.Option(100000, "--train-samples", help="Training samples"),
-    test_samples: int = typer.Option(20000, "--test-samples", help="Test samples"),
+    db_path: str = typer.Option(
+        "sysmon_eval.db", "--db", help="Evaluation database"
+    ),
+    config_path: Optional[Path] = typer.Option(
+        None, "--config", help="Config file"
+    ),
+    output_dir: Path = typer.Option(
+        "evaluation", "--output", help="Output directory"
+    ),
+    train_samples: int = typer.Option(
+        100000, "--train-samples", help="Training samples"
+    ),
+    test_samples: int = typer.Option(
+        20000, "--test-samples", help="Test samples"
+    ),
 ) -> None:
     """Run evaluation with synthetic data."""
     config = Config.load(config_path) if config_path else Config()
@@ -320,7 +354,7 @@ def evaluate(
 
     logger = setup_logging(level=config.logging.level)
 
-    console.print(f"[bold cyan]Running evaluation...[/bold cyan]")
+    console.print("[bold cyan]Running evaluation...[/bold cyan]")
     console.print(f"  Training samples: {train_samples:,}")
     console.print(f"  Test samples: {test_samples:,}")
     console.print(f"  Output: {output_dir}")
@@ -351,7 +385,9 @@ def evaluate(
 
         console.print("[bold green]✓ Evaluation complete[/bold green]")
         console.print(f"  Accuracy: {results['test_metrics']['accuracy']:.2%}")
-        console.print(f"  Precision: {results['test_metrics']['precision']:.2%}")
+        console.print(
+            f"  Precision: {results['test_metrics']['precision']:.2%}"
+        )
         console.print(f"  Recall: {results['test_metrics']['recall']:.2%}")
         console.print(f"  FPR: {results['test_metrics']['fpr']:.2%}")
         console.print(f"  AUC: {results['test_metrics']['auc']:.3f}")
@@ -369,10 +405,12 @@ def export(
     db_path: str = typer.Option("sysmon.db", "--db", help="Database path"),
     window: str = typer.Option("24h", "--window", help="Export window"),
     output: Path = typer.Option("export.csv", "--to", help="Output file"),
-    format: str = typer.Option("csv", "--format", help="Output format (csv, json)"),
+    format: str = typer.Option(
+        "csv", "--format", help="Output format (csv, json)"
+    ),
 ) -> None:
     """Export samples to file."""
-    console.print(f"[bold cyan]Exporting data...[/bold cyan]")
+    console.print("[bold cyan]Exporting data...[/bold cyan]")
 
     repo = Repository(db_path)
     repo.connect()
@@ -391,7 +429,9 @@ def export(
 
     repo.close()
 
-    console.print(f"[bold green]✓ Exported {len(df):,} samples to {output}[/bold green]")
+    console.print(
+        f"[bold green]✓ Exported {len(df):,} samples to {output}[/bold green]"
+    )
 
 
 @app.command()

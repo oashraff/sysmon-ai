@@ -39,7 +39,9 @@ class BatchWriter:
         self.max_queue_size = max_queue_size
         self.flush_interval = flush_interval
 
-        self._queue: queue.Queue[Dict[str, Any]] = queue.Queue(maxsize=max_queue_size)
+        self._queue: queue.Queue[Dict[str, Any]] = queue.Queue(
+            maxsize=max_queue_size
+        )
         self._running = False
         self._thread: threading.Thread | None = None
         self._dropped_count = 0
@@ -116,9 +118,8 @@ class BatchWriter:
 
                 # Flush if batch full or interval elapsed
                 now = time.time()
-                should_flush = (
-                    len(batch) >= self.batch_size
-                    or (batch and now - last_flush >= self.flush_interval)
+                should_flush = len(batch) >= self.batch_size or (
+                    batch and now - last_flush >= self.flush_interval
                 )
 
                 if should_flush and batch:
