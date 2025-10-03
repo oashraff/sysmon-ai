@@ -1,0 +1,46 @@
+# Example configuration for sysmon-ai
+# Copy to config.yaml and customize
+
+host: my-laptop
+
+sampling:
+  rate_seconds: 1.0
+  batch_size: 100
+  max_queue_size: 10000
+
+storage:
+  db_path: sysmon.db
+  retention_days: 30
+  wal_checkpoint_interval: 1000
+
+anomaly:
+  contamination: 0.05
+  n_estimators: 100
+  max_samples: 256
+  random_state: 42
+  baseline_window_days: 7
+  target_fpr: 0.05
+
+forecast:
+  horizon_hours: 72
+  min_training_samples: 1000
+  algo: linear  # linear or gbr
+  confidence_level: 0.95
+
+thresholds:
+  cpu_pct: 90.0
+  mem_pct: 90.0
+  disk_pct: 85.0
+  swap_pct: 80.0
+
+dashboard:
+  refresh_rate: 1.0
+  default_view_hours: 1
+  enable_images: true
+  ascii_fallback: false
+
+logging:
+  level: INFO
+  file_path: logs/sysmon.log
+  max_bytes: 10485760  # 10MB
+  backup_count: 5
