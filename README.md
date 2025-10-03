@@ -5,8 +5,7 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A zero-cost, privacy-first system monitoring solution that runs entirely on your local machine. No cloud dependencies, no external APIs—just pure local intelligence.
-
+A zero-cost, privacy-first system monitoring solution that runs entirely on your local machine. 
 ## Features
 
 - **Real-time Monitoring**: CPU, memory, disk I/O, network, swap, process count
