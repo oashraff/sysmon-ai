@@ -3,7 +3,7 @@
 ### Live demo
 
 Interactive anomaly-threshold calibration demo:
-[Hugging Face Space]([https://huggingface.co/spaces/omarash/sysmon-anomaly-calibration])
+[Hugging Face Space](https://huggingface.co/spaces/omarash/sysmon-anomaly-calibration)
 
 Full engineering case study:
 [Coming soon!!!]
