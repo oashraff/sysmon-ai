@@ -1,5 +1,13 @@
 # SysMon AI
 
+### Live demo
+
+Interactive anomaly-threshold calibration demo:
+[Hugging Face Space]([https://huggingface.co/spaces/omarash/sysmon-anomaly-calibration])
+
+Full engineering case study:
+[Coming soon!!!]
+
 **Terminal-Based System Monitor with Local AI Anomaly Detection**
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
